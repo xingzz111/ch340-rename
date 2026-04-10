@@ -7,19 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            artifact_name: kimi-ch340-linux-x86_64
-            build_name: kimi-ch340
-          - os: macos-latest
-            artifact_name: kimi-ch340-macos-universal
-            build_name: kimi-ch340
-          - os: windows-latest
-            artifact_name: kimi-ch340-windows-x86_64.exe
-            build_name: kimi-ch340
+    runs-on: macos-latest
 
     steps:
       - name: Checkout code
@@ -40,22 +28,16 @@ jobs:
       - name: Build binary
         working-directory: ./FTProg
         run: |
-          pyinstaller --onefile --name ${{ matrix.build_name }} src/kimi_ch340/cli.py
+          pyinstaller --onefile --name kimi-ch340 src/kimi_ch340/cli.py
 
-      - name: Rename artifact (Unix)
-        if: matrix.os != 'windows-latest'
+      - name: Rename artifact
         run: |
-          mv FTProg/dist/${{ matrix.build_name }} FTProg/dist/${{ matrix.artifact_name }}
-          chmod +x FTProg/dist/${{ matrix.artifact_name }}
-
-      - name: Rename artifact (Windows)
-        if: matrix.os == 'windows-latest'
-        run: |
-          Move-Item FTProg/dist/${{ matrix.build_name }}.exe FTProg/dist/${{ matrix.artifact_name }}
+          mv FTProg/dist/kimi-ch340 FTProg/dist/kimi-ch340-macos-universal
+          chmod +x FTProg/dist/kimi-ch340-macos-universal
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
         with:
-          files: FTProg/dist/${{ matrix.artifact_name }}
+          files: FTProg/dist/kimi-ch340-macos-universal
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
