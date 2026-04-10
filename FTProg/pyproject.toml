@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kimi-ch340"
+version = "0.1.0"
+description = "macOS CLI tool to read/write CH34x (CH340) EEPROM fields (e.g., serial string) and self-update."
+requires-python = ">=3.11"
+dependencies = ["pyusb>=1.2.1"]
+
+[project.scripts]
+kimi-ch340 = "kimi_ch340.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

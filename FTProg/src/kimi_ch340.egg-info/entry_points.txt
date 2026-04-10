@@ -1,0 +1,2 @@
+[console_scripts]
+kimi-ch340 = kimi_ch340.cli:main

@@ -1,0 +1,11 @@
+pyproject.toml
+src/kimi_ch340/__init__.py
+src/kimi_ch340/ch34x.py
+src/kimi_ch340/cli.py
+src/kimi_ch340/updater.py
+src/kimi_ch340.egg-info/PKG-INFO
+src/kimi_ch340.egg-info/SOURCES.txt
+src/kimi_ch340.egg-info/dependency_links.txt
+src/kimi_ch340.egg-info/entry_points.txt
+src/kimi_ch340.egg-info/requires.txt
+src/kimi_ch340.egg-info/top_level.txt
