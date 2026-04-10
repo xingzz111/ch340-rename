@@ -10,24 +10,23 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
         include:
           - os: ubuntu-latest
-            artifact_name: kimi-ch340
-            asset_name: kimi-ch340-linux-x86_64
+            artifact_name: kimi-ch340-linux-x86_64
+            build_name: kimi-ch340
           - os: macos-latest
-            artifact_name: kimi-ch340
-            asset_name: kimi-ch340-macos-universal
+            artifact_name: kimi-ch340-macos-universal
+            build_name: kimi-ch340
           - os: windows-latest
-            artifact_name: kimi-ch340.exe
-            asset_name: kimi-ch340-windows-x86_64.exe
+            artifact_name: kimi-ch340-windows-x86_64.exe
+            build_name: kimi-ch340
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -41,10 +40,21 @@ jobs:
       - name: Build binary
         working-directory: ./FTProg
         run: |
-          pyinstaller --onefile --name kimi-ch340 src/kimi_ch340/cli.py
+          pyinstaller --onefile --name ${{ matrix.build_name }} src/kimi_ch340/cli.py
+
+      - name: Rename artifact
+        run: |
+          cd FTProg/dist
+          # 获取构建产物
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            mv ${{ matrix.build_name }}.exe ${{ matrix.artifact_name }}
+          else
+            mv ${{ matrix.build_name }} ${{ matrix.artifact_name }}
+            chmod +x ${{ matrix.artifact_name }}
+          fi
 
       - name: Upload Release Assets
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: FTProg/dist/${{ matrix.artifact_name }}
         env:
